@@ -1,0 +1,139 @@
+{{> header}}
+
+<div class="wrapper" id="wrapper">
+    <div class="right-container" id="right-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="main-header">
+                        <h3>Add New Record</h3>
+                        <hr style="border: 0.5px solid black;">
+                        {{!-- <em>the first priority information</em> --}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-top">
+                <div class="col-md-12">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="alert alert-success" style="display: none;">Record Added!</div>
+
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="full_name" class="col-md-4 col-form-label text-md-right">Full
+                                        Name</label>
+                                    <div class="col-md-6">
+                                        <span style="float: right; color:red;" id="error-name"></span>
+                                        <input type="text" id="name" class="form-control" name="name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="type" class="col-md-4 col-form-label text-md-right">Type</label>
+                                    <div class="col-md-6">
+                                        <span style="float: right; color:red;" id="error-type"></span>
+                                        <input type="text" id="type" class="form-control" name="type">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="favorite" class="col-md-4 col-form-label text-md-right">Favorite</label>
+                                    <div class="col-md-6">
+                                        <span style="float: right; color:red;" id="error-favorite"></span>
+                                        <input type="text" id="favorite" class="form-control" name="favorite">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary" onclick="addRecord();">
+                                        Add Record
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer}}
+
+<script>
+    $('#name').keyup(function () {
+        $('#name').css({
+            "border": "1px solid #ccc",
+            "border-radius": "0px"
+        });
+        $('#error-name').html('');
+    });
+    $('#type').keyup(function () {
+        $('#type').css({
+            "border": "1px solid #ccc",
+            "border-radius": "0px"
+        });
+        $('#error-type').html('');
+    });
+    $('#favorite').keyup(function () {
+        $('#favorite').css({
+            "border": "1px solid #ccc",
+            "border-radius": "0px"
+        });
+        $('#error-favorite').html('');
+    });
+
+    function addRecord() {
+        var inputError = false;
+        var name = $('#name').val();
+        var type = $('#type').val();
+        var favorite = $('#favorite').val();
+        if (name == '') {
+            $('#name').css({
+                "border": "1px solid red",
+                "border-radius": "5px"
+            });
+            $('#error-name').html('* Name is missing');
+            inputError = true;
+        }
+        if (type == '') {
+            $('#type').css({
+                "border": "1px solid red",
+                "border-radius": "5px"
+            });
+            $('#error-type').html('* Type is missing');
+            inputError = true;
+        }
+        if (favorite == '') {
+            $('#favorite').css({
+                "border": "1px solid red",
+                "border-radius": "5px"
+            });
+            $('#error-favorite').html('* Favorite is missing');
+            inputError = true;
+        }
+        if (!inputError) {
+            console.log(url);
+            $.ajax({
+                url: url +'add_hobby',
+                method: 'POST',
+                data: { name: name, type: type, favorite: favorite },
+                success: function (res) {
+                    if (res.status == 200) {
+                        console.log(res.data);
+                        $('#name').val('');
+                        $('#type').val('');
+                        $('#favorite').val('');
+                        $('.alert-success').show();
+                        setTimeout(function() {
+                            $('.alert-success').fadeOut('slow');
+                        }, 2000);
+                    }
+                    else {
+                        console.log(res);
+                    }
+                }
+            });
+        }
+    }
+</script>
